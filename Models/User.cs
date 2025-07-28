@@ -2,18 +2,9 @@ namespace SkillHub.Models;
 
 public class User
 {
-    public Guid Id { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string? ProfilePictureUrl { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public string Currency { get; set; } = "USD";
-    public string PreferredLanguage { get; set; } = "en";
-    public bool IsEmailConfirmed { get; set; } = false;
-    public string Role { get; set; } = "User";
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public bool IsActive { get; set; } = true;
+    public Guid Id { get; set; } 
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Password { get; set; } = "";
 }

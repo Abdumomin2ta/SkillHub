@@ -23,10 +23,12 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet]
-    public IActionResult GetAll()
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginDto loginDto)
     {
-        var users = _context.Users.ToList();
-        return Ok(users);
+        var user = _context.Users.FirstOrDefault(u => u.Email == loginDto.Email);
+        if (user == null) return NotFound("User not found");
+        if (user.Password != loginDto.Password) return Unauthorized("Incorrect password");
+        return Ok("Login successful");
     }
 }

@@ -12,8 +12,7 @@ namespace SkillHub.Migrations
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
-        {
-#pragma warning disable 612, 618
+        {            
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("SkillHub.Models.User", b =>
@@ -76,3 +75,4 @@ namespace SkillHub.Migrations
         }
     }
 }
+
