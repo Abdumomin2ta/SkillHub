@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SkillHub.Data;
 
+
 #nullable disable
 
 namespace SkillHub.Migrations
