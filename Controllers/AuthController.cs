@@ -1,59 +1,45 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using SkillHub.Data;
-using SkillHub.Models;
-using SkillHub.Models.DTOs;
+using SkillHub.DTOs;
+using SkillHub.Services.Interfaces;
 
 namespace SkillHub.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IConfiguration _config;
+    private readonly IAuthService _auth;
 
-    public AuthController(AppDbContext db, IConfiguration config)
+    public AuthController(IAuthService auth)
     {
-        _db = db;
-        _config = config;
+        _auth = auth;
     }
 
     [HttpPost("register")]
-    public IActionResult Register(RegisterDto dto)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var user = new User
+        try
         {
-            Username = dto.Username,
-            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = dto.IsMentor ? "Mentor" : "Learner"
-        };
-        
-        _db.Users.Add(user);
-        _db.SaveChanges();
-        
-        return Ok(new { Token = GenerateToken(user) });
+            var user = await _auth.Register(request);
+            return Ok(user);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
-    private string GenerateToken(User user)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured")));
-        
-        var claims = new[]
+        try
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.Now.AddDays(1),
-            signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            var token = await _auth.Login(request);
+            return Ok(new { token });
+        }
+        catch (Exception ex)
+        {
+            return Unauthorized(ex.Message);
+        }
     }
 }
